@@ -1,11 +1,14 @@
 
-import { signInWithPopup, onAuthStateChanged, signOut } from 'firebase/auth'
-import React, { useEffect, useState } from 'react'
+import { signInWithPopup, onAuthStateChanged } from 'firebase/auth'
+import { useEffect, useState } from 'react'
 import { auth, googleProvider } from '../utils/firebase'
 import api from '../utils/axious'
 import { FcGoogle } from "react-icons/fc";
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserdata } from '../redux/userSlice';
+import SideBar from '../components/SideBar';
+import ChatArea from '../components/ChatArea';
+import Artifact from '../components/Artifact';
 
 function Home() {
     const {userData}=useSelector(state=>state.user)
@@ -44,14 +47,6 @@ function Home() {
           }
         }
       }
-      const handleLogout=async ()=> {
-        try{
-          await api.post("/api/auth/logout")
-        }catch (error){
-          console.log(error)
-        }
-        await signOut(auth)
-      }
 
       if(loading){
         return (
@@ -63,16 +58,13 @@ function Home() {
 
       if(user){
         return (
-            <div className='h-screen flex flex-col items-center justify-center bg-[#0d0f14] text-white gap-2'>
-                <h1 className='text-xl font-semibold'>Welcome back, {user.displayName}</h1>
-                <p className='text-sm text-slate-400'>{user.email}</p>
-                <button onClick={handleLogout} className='mt-4 px-4 py-2 rounded-lg text-sm font-medium text-white bg-white/10 border border-white/10 hover:bg-white/20 transition-all duration-150 cursor-pointer'>
-                    Logout
-                </button>
+            <div className='h-screen flex bg-[#0d0f14] text-white overflow-hidden'>
+                <SideBar/>
+                <ChatArea/>
+                <Artifact/>
             </div>
         )
       }
-
   return (
     <div className='h-screen flex bg-[#0d0f14] text-white overflow-hidden'>
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm'>
