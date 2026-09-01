@@ -1,3 +1,4 @@
+import "dotenv/config"
 import { ChatGroq } from "@langchain/groq"
 import { ChatGoogle } from "@langchain/google";
 
