@@ -2,13 +2,14 @@ import { useState, useEffect } from 'react'
 import { PanelLeftIcon, PenBoxIcon, Plus } from "lucide-react"
 import { getConversations } from '../features/getConversations'
 import { setConversations, addConversations } from '../redux/conversationSlice'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { createConversation } from '../features/createConversation'
 
 
 function SideBar() {
     const [collapsed,setCollapsed] = useState(false)
     const dispatch=useDispatch()
+    const {conversations,selectedConversation}=useSelector(state=>state.conversation)
     const handleCreate=async () => {
         const data = await createConversation()
         dispatch(addConversations(data))
@@ -43,8 +44,27 @@ function SideBar() {
                     <Plus size={15}/>
                     New Chat
                 </button>
-
             </div>
+            {conversations.length == 0 
+            ? 
+            <div className=' px-5 pt-4 pb-1.5 text-[10.5px] font-semibold uppercase tracking-widest text-slate-600'> 
+                No Recent Conversations
+            </div>
+                :
+                <div className=' px-5 pt-4 pb-1.5 text-[10.5px] font-semibold uppercase tracking-widest text-slate-600'> 
+                 Recents
+                </div>}
+
+                <div className='flex-1 overflow-y-auto px-2.5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'>
+                    {conversations.map((conv)=>{
+                       const isActive=selectedConversation?._id==conv?._id
+                       return(
+                        <div className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 ${isActive ? "bg-indigo-500/10 border-indigo-500/[0.18]": "bg-transparent border-transparent"}`}>
+
+                        </div>
+                       )
+                    })}
+                </div>
         </div>
     </div>
   )
