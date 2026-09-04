@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { PanelLeftIcon, PenBoxIcon, Plus } from "lucide-react"
 import { getConversations } from '../features/getConversations'
-import { setConversations, addConversations } from '../redux/conversationSlice'
+import { setConversations, addConversations, setSelectedConversation } from '../redux/conversationSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { createConversation } from '../features/createConversation'
 
@@ -59,8 +59,8 @@ function SideBar() {
                     {conversations.map((conv)=>{
                        const isActive=selectedConversation?._id==conv?._id
                        return(
-                        <div className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 ${isActive ? "bg-indigo-500/10 border-indigo-500/[0.18]": "bg-transparent border-transparent"}`}>
-
+                        <div onClick={()=>dispatch(setSelectedConversation(conv))} className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 ${isActive ? "bg-indigo-500/10 border-indigo-500/[0.18]": "bg-transparent border-transparent"}`}>
+                            <span className='text-[13px] text-slate-300 truncate'>{conv.title}</span>
                         </div>
                        )
                     })}
