@@ -8,6 +8,8 @@ import cookieParser from "cookie-parser"
 import protect from "./middleware/auth.middleware.js"
 import { getCurrentUser } from "./controllers/user.controller.js"
 import { proxyWithHeader } from "./utils/proxyWithHeader.js"
+import morgan from "morgan"
+
 
 const app = express()
 const port = process.env.PORT || 3000
@@ -18,7 +20,7 @@ app.use(cors({
 }))
 
 app.use(cookieParser())
-
+app.use(morgan("dev"))
 app.use("/api/auth",proxy(process.env.AUTH_SERVICE))
 app.use("/api/chat",protect,proxyWithHeader(process.env.CHAT_SERVICE))
 app.use("/api/agent",protect,proxy(process.env.AGENT_SERVICE))
