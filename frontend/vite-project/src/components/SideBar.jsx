@@ -49,6 +49,21 @@ function SideBar() {
                        )
                     })}
                 </div>
+                <div className='relative shrink-0'>
+                                {
+                                    (userData?.avatar && !imageError) ? 
+                                    <img 
+                                    className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25'
+                                    src={userData?.avatar} 
+                                    alt={"image"}
+                                    onError={()=> setImageError(true)} />
+                                    :
+                                    <div className='flex items-center justify-center w-9 h-9 rounded-[10px] bg-white/[0.06] text-slate-400'>
+                                        <User size={15} className="text-slate-400"/>
+                                    </div>
+                                }
+
+                            </div>
             </div>
         )
     }   

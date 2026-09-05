@@ -1,7 +1,15 @@
+import MessageList from "./MessageList"
+import Nav from "./Nav"
+import ChatInput from "./ChatInput"
+
 function ChatArea() {
   return (
     <div className='flex-1 flex flex-col'>
-        ChatArea</div>
+        <Nav/>
+        <MessageList/>
+        <ChatInput/>
+
+        </div>
   )
 }
 
