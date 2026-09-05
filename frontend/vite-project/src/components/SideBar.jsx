@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { PanelLeftIcon, PanelRight, PenBoxIcon, Plus, MessageSquare, UserIcon, Coins, LogOut } from "lucide-react"
+import { PanelLeftIcon, PanelRight, PenBoxIcon, Plus, MessageSquare, Coins, LogOut, User } from "lucide-react"
 import { getConversations } from '../features/getConversations'
 import { setConversations, addConversations, setSelectedConversation } from '../redux/conversationSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -10,6 +10,7 @@ import logOut from '../features/logOut'
 
 function SideBar() {
     const [collapsed,setCollapsed] = useState(false)
+    const [imageError,setImageError] = useState(false)
     const dispatch=useDispatch()
     const {conversations,selectedConversation}=useSelector(state=>state.conversation)
     const {userData}=useSelector(state=>state.user)
@@ -32,6 +33,22 @@ function SideBar() {
                 onClick={()=>setCollapsed(false)}>
                     <PanelRight/>
                 </button>
+                <button className='flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer'
+                onClick={handleCreate}>
+                    <Plus size={17}/>
+                </button>
+                <div className='flex-1 overflow-y-auto px-2.5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pt-5'>
+                    {conversations.map((conv)=>{
+                       const isActive=selectedConversation?._id==conv?._id
+                       return(
+                        <div onClick={()=>dispatch(setSelectedConversation(conv))} className={`flex items-center gap-2.5 cursor-pointer mb-0.5 px-3 py-2.5 rounded-[10px] border transition-colors duration-150 ${isActive ? "bg-indigo-500/10 border-indigo-500/[0.18]": "bg-transparent border-transparent"}`}>
+                            <div className={`flex items-center justify-center shrink-0 w-[20px] h-[20px] rounded-lg transition-colors duration-150 ${isActive ? "bg-indigo-500/15 text-indigo-400" : "bg-white/[0.05] text-slate-500"}`}>
+                                <MessageSquare size={13}/>
+                            </div>
+                        </div>
+                       )
+                    })}
+                </div>
             </div>
         )
     }   
@@ -91,14 +108,15 @@ function SideBar() {
                         <div className='flex items-center gap-2.5 cursor-pointer rounded-xl px-3 py-2.5 hover:bg-white/[0.05] transition-colors duration-150'>
                             <div className='relative shrink-0'>
                                 {
-                                    userData?.avatar ? 
+                                    (userData?.avatar && !imageError) ? 
                                     <img 
                                     className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25'
                                     src={userData?.avatar} 
-                                    alt={"image"}/>
+                                    alt={"image"}
+                                    onError={()=> setImageError(true)} />
                                     :
                                     <div className='flex items-center justify-center w-9 h-9 rounded-[10px] bg-white/[0.06] text-slate-400'>
-                                        <UserIcon size={18}/>
+                                        <User size={15} className="text-slate-400"/>
                                     </div>
                                 }
 
