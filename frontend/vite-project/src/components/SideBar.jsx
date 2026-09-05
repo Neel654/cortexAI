@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { PanelLeftIcon, PenBoxIcon, Plus, MessageSquare } from "lucide-react"
+import { PanelLeftIcon, PenBoxIcon, Plus, MessageSquare, UserIcon } from "lucide-react"
 import { getConversations } from '../features/getConversations'
 import { setConversations, addConversations, setSelectedConversation } from '../redux/conversationSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,9 @@ import { createConversation } from '../features/createConversation'
 function SideBar() {
     const [collapsed,setCollapsed] = useState(false)
     const dispatch=useDispatch()
+    const [imageError,setImageError]= useState(false)
     const {conversations,selectedConversation}=useSelector(state=>state.conversation)
+    const {userData}=useSelector(state=>state.user)
     const handleCreate=async () => {
         const data = await createConversation()
         dispatch(addConversations(data))
@@ -67,6 +69,34 @@ function SideBar() {
                         </div>
                        )
                     })}
+                </div>
+
+                <div className='mx-2.5 h-px bg-white/[0.06]'>
+                <div className='px-3.5 py-3.5'>
+                    {userData ? (
+                        <div className='flex items-center gap-2.5 cursor-pointer rounded-xl px-3 py-2.5 hover:bg-white/[0.05] transition-colors duration-150'>
+                            <div className='relative shrink-0'>
+                                {
+                                    (userData?.avatar || !imageError) 
+                                    ? 
+                                    <img 
+                                    className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25'
+                                    src={userData?.avatar} 
+                                    alt={"image"} 
+                                    onError={()=> setImageError(true)}/>
+                                    :
+                                    <div className='flex items-center justify-center w-9 h-9 rounded-[10px] bg-white/[0.05] text-slate-400'>
+                                        <UserIcon size={18}/>
+                                    </div>
+                                }
+
+                            </div>
+                        </div>)
+                         : 
+                         <button>
+                            Login
+                            </button>}
+                </div>
                 </div>
         </div>
     </div>
