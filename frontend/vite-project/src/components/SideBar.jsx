@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react'
-import { PanelLeftIcon, PenBoxIcon, Plus, MessageSquare, UserIcon } from "lucide-react"
+import { PanelLeftIcon, PenBoxIcon, Plus, MessageSquare, UserIcon, Coins, LogOut } from "lucide-react"
 import { getConversations } from '../features/getConversations'
 import { setConversations, addConversations, setSelectedConversation } from '../redux/conversationSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { createConversation } from '../features/createConversation'
+import { setUserdata } from '../redux/userSlice'
+import logOut from '../features/logOut'
 
 
 function SideBar() {
     const [collapsed,setCollapsed] = useState(false)
     const dispatch=useDispatch()
-    const [imageError,setImageError]= useState(false)
     const {conversations,selectedConversation}=useSelector(state=>state.conversation)
     const {userData}=useSelector(state=>state.user)
     const handleCreate=async () => {
@@ -71,32 +72,46 @@ function SideBar() {
                     })}
                 </div>
 
-                <div className='mx-2.5 h-px bg-white/[0.06]'>
+                <div className='mx-2.5 h-px bg-white/[0.06]'></div>
                 <div className='px-3.5 py-3.5'>
                     {userData ? (
                         <div className='flex items-center gap-2.5 cursor-pointer rounded-xl px-3 py-2.5 hover:bg-white/[0.05] transition-colors duration-150'>
                             <div className='relative shrink-0'>
                                 {
-                                    (userData?.avatar || !imageError) 
-                                    ? 
+                                    userData?.avatar ? 
                                     <img 
                                     className='w-9 h-9 rounded-[10px] object-cover border-2 border-indigo-500/25'
                                     src={userData?.avatar} 
-                                    alt={"image"} 
-                                    onError={()=> setImageError(true)}/>
+                                    alt={"image"}/>
                                     :
-                                    <div className='flex items-center justify-center w-9 h-9 rounded-[10px] bg-white/[0.05] text-slate-400'>
+                                    <div className='flex items-center justify-center w-9 h-9 rounded-[10px] bg-white/[0.06] text-slate-400'>
                                         <UserIcon size={18}/>
                                     </div>
                                 }
 
+                            </div>
+                            <div className='flex-1 min-w-0'>
+                                <p className='text-[13.5px] font-semibold text-slate-100 truncate'>{userData?.name || "user"}</p>
+                                <p className='text-[11px] text-slate-600 mt-px'>{"Free Plan"}</p>
+                            </div>
+                            <div className='flex gap-1'>
+                                <button className='flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-yellow-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150'>
+                                    <Coins size={16}/>
+                                </button>
+                                <button className='flex items-center justify-center w-7 h-7 rounded-[7px] border-none bg-transparent text-slate-600 cursor-pointer hover:bg-white/[0.08] hover:text-slate-400 transition-all duration-150'
+                                onClick={()=>{
+                                    logOut();
+                                    dispatch(setUserdata(null))
+                                }}
+                                >
+                                    <LogOut size={16}/>
+                                </button>
                             </div>
                         </div>)
                          : 
                          <button>
                             Login
                             </button>}
-                </div>
                 </div>
         </div>
     </div>

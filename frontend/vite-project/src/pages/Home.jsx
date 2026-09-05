@@ -6,6 +6,7 @@ import api from '../utils/axious'
 import { FcGoogle } from "react-icons/fc";
 import { useSelector, useDispatch } from 'react-redux';
 import { setUserdata } from '../redux/userSlice';
+import getCurrentUser from '../features/getCurrentUser';
 import SideBar from '../components/SideBar';
 import ChatArea from '../components/ChatArea';
 import Artifact from '../components/Artifact';
@@ -18,8 +19,12 @@ function Home() {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser)
+            if(currentUser){
+                const data=await getCurrentUser()
+                dispatch(setUserdata(data))
+            }
             setLoading(false)
         })
         return unsubscribe
