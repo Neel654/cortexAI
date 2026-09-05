@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { PanelLeftIcon, PenBoxIcon, Plus, MessageSquare, UserIcon, Coins, LogOut } from "lucide-react"
+import { PanelLeftIcon, PanelRight, PenBoxIcon, Plus, MessageSquare, UserIcon, Coins, LogOut } from "lucide-react"
 import { getConversations } from '../features/getConversations'
 import { setConversations, addConversations, setSelectedConversation } from '../redux/conversationSlice'
 import { useDispatch, useSelector } from 'react-redux'
@@ -23,7 +23,20 @@ function SideBar() {
             dispatch(setConversations(data))
         }
         getConv()
-    },[])
+    },[userData?._id])
+
+    if(collapsed){
+        return(
+            <div className='hidden lg:flex flex-col items-center w-[56px] h-screen bg-[#0d0f14] border-r border-white/[0.06] py-4 gap-1 shrink-0'>
+                <button className='flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer mb-1'
+                onClick={()=>setCollapsed(false)}>
+                    <PanelRight/>
+                </button>
+            </div>
+        )
+    }   
+    
+    
 
   return (
     <div className={`fixed lg:static inset-y-0 left-0 z-50 ${collapsed ? 'w-0' : 'w-[270px]'} h-screen shrink-0 bg-[#0d0f14] border-r border-white/[0.06] overflow-hidden transition-all duration-200`}>
@@ -109,13 +122,14 @@ function SideBar() {
                             </div>
                         </div>)
                          : 
-                         <button>
+                         <button className='w-full flex items-center justify-center gap-2 text-sm font-medium text-slate-200 bg-white/[0.05] border border-white/[0.08] rounded-xl py-[11px] cursor-pointer hover:bg-white/[0.08] transition-colors duration-150'>
                             Login
                             </button>}
                 </div>
         </div>
     </div>
   )
+
 }
 
 export default SideBar
