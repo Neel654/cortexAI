@@ -11,13 +11,15 @@ function ChatArea() {
     const dispatch=useDispatch()
     useEffect(()=>{
         if(selectedConversation){
+            if(selectedConversation.title=="New Chat")
+                return;
             const getMesg=async()=>{
                 const data=await getMessages(selectedConversation?._id)
                 dispatch(setMessages(data))
             }
             getMesg()
         }
-    },[selectedConversation])
+    },[selectedConversation?._id])
   return (
     <div className='flex-1 flex flex-col'>
         <Nav/>

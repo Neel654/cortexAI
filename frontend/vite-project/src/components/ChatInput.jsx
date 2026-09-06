@@ -3,15 +3,32 @@ import { Mic, Paperclip, Send } from "lucide-react"
 import { useSelector, useDispatch } from 'react-redux'
 import sendMessage from '../features/sendMessage'
 import { addMessage } from '../redux/messageSlice'
+import { createConversation } from '../features/createConversation'
+import { updateConversation } from '../features/updateConversation'
+import { setSelectedConversation, addConversations, setConvTitle } from '../redux/conversationSlice'
 
 function ChatInput() {
     const[value,setValue]=useState("")
     const {selectedConversation}=useSelector(state=>state.conversation)
     const dispatch=useDispatch()
     const handleSendMessage=async()=>{
-        const payload={
-            prompt:value.trim(),conversationId:selectedConversation?._id
+        let conversation=selectedConversation
+        if(!conversation){
+            const conv=await createConversation()
+            dispatch(setSelectedConversation(conv))
+            dispatch(addConversations(conv))
+            conversation=conv
         }
+
+        if(conversation.title=="New Chat"){
+            await updateConversation({id:conversation._id,title:value.trim()})
+            dispatch(setConvTitle({conversationId:conversation._id,title:value.trim()}))
+        }
+
+        const payload={
+            prompt:value.trim(),conversationId:conversation?._id
+        }
+
         dispatch(addMessage({role:"user", content:value.trim()}))
         setValue("")
 
