@@ -1,15 +1,21 @@
 import { useState } from 'react'
 import { Mic, Paperclip, Send } from "lucide-react"
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import sendMessage from '../features/sendMessage'
+import { setMessages } from '../redux/messageSlice'
 
 function ChatInput() {
     const[value,setValue]=useState("")
     const {selectedConversation}=useSelector(state=>state.conversation)
+    const {messages}=useSelector(state=>state.message)
+    const dispatch=useDispatch()
     const handleSendMessage=async()=>{
         const payload={
             prompt:value.trim(),conversationId:selectedConversation?._id
         }
+        dispatch(setMessages([...messages,{role:"user", content:value.trim()}]))
+        setValue("")
+
         const data=await sendMessage(payload)
         console.log(data)
     }
@@ -32,7 +38,7 @@ function ChatInput() {
             </button>
             </div>
             <button
-            disabled={!value.trim()} 
+            disabled={!value.trim()}
             onClick={handleSendMessage}
             className={`flex items-center justify-center w-8 h-8 rounded-lg border-none cursor-pointer transition-all duration-150 ${value.trim()? "bg-linear-to-br from-indigo-500 to-violet-700 hover:opacity-90 text-white" : "bg-white/[0.05] text-slate-600 cursor-not-allowed"}`}>
                 <Send size={15}/>
