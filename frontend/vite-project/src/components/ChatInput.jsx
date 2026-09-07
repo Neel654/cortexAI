@@ -22,7 +22,7 @@ function ChatInput() {
 
         if(conversation.title=="New Chat"){
             await updateConversation({id:conversation._id,title:value.trim()})
-            dispatch(setConvTitle({conversationId:conversation._id,title:value.trim()}))
+            dispatch(setConvTitle({conversationId:conversation._id,title:value.slice(0,40)}))
         }
 
         const payload={

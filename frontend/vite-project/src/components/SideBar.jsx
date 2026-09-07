@@ -34,7 +34,7 @@ function SideBar() {
                     <PanelRight/>
                 </button>
                 <button className='flex items-center justify-center w-9 h-9 rounded-xl text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer'
-                onClick={handleCreate}>
+                onClick={()=> dispatch(setSelectedConversation(null))}>
                     <Plus size={17}/>
                 </button>
                 <div className='flex-1 overflow-y-auto px-2.5 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pt-5'>
@@ -83,7 +83,7 @@ function SideBar() {
             <span className= 'text-[10px] font-medium text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-2 py-0.5 rounded-full tracking-wide'>
                 free
             </span>
-            <button className='flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer' onClick={handleCreate}>
+            <button className='flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer' onClick={()=> dispatch(setSelectedConversation(null))}>
                 <PenBoxIcon size={14}/>
             </button>
             </div>
