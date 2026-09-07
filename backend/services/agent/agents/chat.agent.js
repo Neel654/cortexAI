@@ -4,7 +4,7 @@ import { getMemory } from "../config/memory.js"
 
 export const chatAgent=async (state) => {
     const llm=await getModel("chat")
-    const history=await getMemory(state.conversationId)
+    const history=await getMemory(state.conversationId) ?? []
     const searchContext=state.searchResults?.length?`Web Search Results: ${JSON.stringify(state.searchResults)} 
     Answer the user using only the above search results.`:""
     const hasSearch=state.searchResults?.length

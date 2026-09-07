@@ -8,7 +8,7 @@ export const getMemory=async (conversationId)=>{
         return JSON.parse(cached)
     }
 
-    const messages=await getMessages(conversationId)
+    const messages=await getMessages(conversationId) ?? []
     await redis.set(key,JSON.stringify(messages),"EX",24*60*60)
 
     return messages
