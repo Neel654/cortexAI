@@ -34,8 +34,7 @@ function ChatInput() {
         setValue("")
 
         const data=await sendMessage(payload)
-        dispatch(addMessage({role:"assistant", content:data}))
-
+        dispatch(addMessage({role:"assistant", content:data.answer,images:data.images}))
         console.log(data)
     }
 const agents=[
