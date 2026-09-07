@@ -32,6 +32,9 @@ import { chatAgent } from "../agents/chat.agent.js";
         case "vision":
             return "vision";
 
+        case "image":
+            return "vision";
+
         case "pdf":
             return "pdf";
 

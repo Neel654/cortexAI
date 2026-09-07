@@ -27,7 +27,7 @@ function ChatInput() {
         }
 
         const payload={
-            prompt:value.trim(),conversationId:conversation?._id
+            prompt:value.trim(),conversationId:conversation?._id,agent:selectedAgent.toLowerCase()
         }
 
         dispatch(addMessage({role:"user", content:value.trim()}))

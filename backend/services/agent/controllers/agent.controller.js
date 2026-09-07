@@ -11,7 +11,7 @@ export const agent=async (req,res) => {
             conversationId,role:"user",content:prompt
         })
         const result=await graph.invoke({
-            prompt,conversationId
+            prompt,conversationId,agent
         })
         const response=result.aiResponse
         await addMessage(conversationId,"assistant",response)

@@ -5,7 +5,19 @@ import { getMemory } from "../config/memory.js"
 export const chatAgent=async (state) => {
     const llm=await getModel("chat")
     const history=await getMemory(state.conversationId)
+    const searchContext=state.searchResults?.length?`Web Search Results: ${JSON.stringify(state.searchResults)} 
+    Answer the user using only the above search results.`:""
+    const hasSearch=state.searchResults?.length
+
     const systemPrompt=`You are CortexAI, an intelligent AI assistant.
+
+    ${searchContext}
+
+    ${hasSearch?`
+- Use search results to answer.
+- Do not mention internal tools.
+`:""}
+
 
     Rules:
 - For simple questions, greetings and short queries, responde naturally in plain text.
