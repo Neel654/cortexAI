@@ -25,9 +25,7 @@ function MessageList() {
         ):
         <div>
             {messages?.map((msg)=>(
-                <div>
-                    <MessageBubble role={msg?.role} content={msg?.content}/>
-                </div>
+                <MessageBubble key={msg?._id} role={msg?.role} content={msg?.content} images={msg.images || []}/>
             ))}
 
         </div>
