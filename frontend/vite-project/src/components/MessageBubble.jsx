@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { X } from "lucide-react"
 import Markdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 
 function MessageBubble({role,content,images}) {
     const isUser=role==="user"
@@ -30,7 +31,28 @@ function MessageBubble({role,content,images}) {
                 ))}
             </div>
          )}       
-        <Markdown>
+        <Markdown 
+        remarkPlugins={[remarkGfm]}
+        components={{
+            h1:({children})=>(
+                <h1 className='text-2xl font-bold mt-5 mb-3'>{children}</h1>
+            ),
+            h2:({children})=>(
+                <h2 className='text-xl font-semibold mt-4 mb-2'>{children}</h2>
+            ),
+            h3:({children})=>(
+                <h3 className='text-lg font-semibold mt-3 mb-2'>{children}</h3>
+            ),
+            p:({children})=>(
+                <p className='mb-3 whitespace-pre-wrap break-words'>{children}</p>
+            ),
+            ul:({children})=>(
+                <ul className='list-disc pl-5 space-y-1 my-2'>{children}</ul>
+            )
+            
+        }}
+        
+        >
             {content}
         </Markdown>
 
