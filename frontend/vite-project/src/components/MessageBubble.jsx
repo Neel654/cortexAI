@@ -92,7 +92,7 @@ function MessageBubble({ role, content, images }) {
 
                             if (!className || !match) {
                                 return (
-                                    <code className='px-1.5 py-0.5 rounded bg-white/10 text-pink-400'>
+                                    <code className='px-1.5 py-0.5 rounded bg-white/10 text-indigo-200'>
                                         {value}
                                     </code>
                                 )
@@ -126,6 +126,7 @@ function MessageBubble({ role, content, images }) {
                                         style={oneDark}
                                         customStyle={{ margin: 0, background: "transparent", fontSize: "13px" }}
                                         wrapLongLines
+                                        showLineNumbers
                                     >
                                         {value}
                                     </SyntaxHighlighter>
