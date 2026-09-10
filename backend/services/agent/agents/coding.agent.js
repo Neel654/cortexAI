@@ -2,6 +2,7 @@ import { getModel } from "../config/llmModels.js"
 
 export const codingAgent=async (state) => {
     const intentLlm=await getModel("intent")
+    const llm=await getModel("coding")
     const intentRes=await intentLlm.invoke(`
         You are an intent classifier.
 
@@ -18,6 +19,92 @@ DOCUMENTATION
 User Request:
 ${state.prompt}
         `)
-    const intent=intentRes.content
-    console.log(intent)
+    const intent=String(intentRes.content||"").trim()
+
+    if(intent=="CODE_GENERATION"){
+        const prompt=`
+        You are CortexAI Coding Agent.
+
+Generate the requested project.
+
+Default Stack:
+- HTML
+- CSS
+- JaavaScript
+
+Use React / Next.js / Vue ONLY if explicitly requested.
+
+Rules:
+
+- Responsive
+- Modern UI
+- CSS Variables
+- Flexbox/Grid
+- Smooth Scroll
+- Hover Effects
+- Beautiful spacing
+- Single page unless user asks otherwise.
+
+Return ONLY valid JSON.
+
+Schema:
+
+{
+"files":[
+{
+"name":"index.html",
+"content":"..."
+},
+{
+"name":"style.css",
+"content":"..."
+},
+{
+"name":"script.js",
+"content":"..."
+}
+]
+}
+
+Rules:
+
+-Output must start with {
+- Output must end with }
+- No markdown
+- No explanation
+- No extra text
+- No \`\`\`
+- Never mention input
+
+User Request:
+${state.prompt}
+        `
+        let res
+        try {
+            res=await llm.invoke(prompt)
+            const content=String(res.content||"")
+            const parsed=JSON.parse(content)
+            const files=parsed.files||[]
+            const aiResponse=`Generated ${files.length} files:\n\n` + files.map(f=>{
+                const lang=(f.name?.split(".").pop()||"").toLowerCase()
+                return `### ${f.name}\n\n\`\`\`${lang}\n${f.content}\n\`\`\``
+            }).join("\n\n")
+            return {
+                ...state,
+                aiResponse,
+                artifacts:files
+            }
+        } catch (error) {
+            return {
+                ...state,
+                aiResponse:String(res?.content||"I couldn't generate valid files. Please try again.")
+            }
+        }
+    }
+
+    const res=await llm.invoke(state.prompt)
+    return {
+        ...state,
+        aiResponse:String(res.content||"")
+    }
 }
