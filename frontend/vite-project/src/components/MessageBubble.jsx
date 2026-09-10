@@ -1,11 +1,24 @@
 import { useState } from 'react'
-import { X, ExternalLink } from "lucide-react"
+import { X, ExternalLink, Check, Copy } from "lucide-react"
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
+import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
 
 function MessageBubble({ role, content, images }) {
     const isUser = role === "user"
     const [lightBox, setLightBox] = useState(null)
+    const [copied, setCopied] = useState(false)
+
+    const handleCopy = async (code) => {
+        try {
+            await navigator.clipboard.writeText(code)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     return (
@@ -72,7 +85,53 @@ function MessageBubble({ role, content, images }) {
                                 {children}
                                 <ExternalLink size={14} />
                             </a>
-                        )
+                        ),
+                        code: ({ className, children }) => {
+                            const value = String(children).trim()
+                            const match = /language-(\w+)/.exec(className || "")
+
+                            if (!className || !match) {
+                                return (
+                                    <code className='px-1.5 py-0.5 rounded bg-white/10 text-pink-400'>
+                                        {value}
+                                    </code>
+                                )
+                            }
+                            const language = match[1]
+                            return (
+                                <div className='my-4 overflow-hidden rounded-xl border border-white/10 bg-[#111318]'>
+                                    <div className='flex items-center justify-between bg-[#1b1d24] border-b border-white/10 px-4 py-2'>
+                                        <span className='uppercase text-xs text-slate-400 font-medium tracking-wide'>
+                                            {language}
+                                        </span>
+                                        <button
+                                            onClick={() => handleCopy(value)}
+                                            className='flex items-center gap-1.5 text-xs text-slate-300 hover:text-white bg-white/5 hover:bg-white/10 px-2.5 py-1 rounded-md border border-white/10 cursor-pointer transition-colors'
+                                        >
+                                            {copied ? (
+                                                <>
+                                                    <Check size={14} className="text-emerald-400" />
+                                                    Copied
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Copy size={14} />
+                                                    Copy
+                                                </>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <SyntaxHighlighter
+                                        language={language}
+                                        style={oneDark}
+                                        customStyle={{ margin: 0, background: "transparent", fontSize: "13px" }}
+                                        wrapLongLines
+                                    >
+                                        {value}
+                                    </SyntaxHighlighter>
+                                </div>
+                            )
+                        }
 
                     }}
 
