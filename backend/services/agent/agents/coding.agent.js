@@ -30,7 +30,7 @@ Generate the requested project.
 Default Stack:
 - HTML
 - CSS
-- JaavaScript
+- JavaScript
 
 Use React / Next.js / Vue ONLY if explicitly requested.
 
@@ -92,7 +92,7 @@ ${state.prompt}
             return {
                 ...state,
                 aiResponse,
-                artifacts:files
+                artifacts:[{id:1,type:"code",files}]
             }
         } catch (error) {
             return {
@@ -102,10 +102,39 @@ ${state.prompt}
         }
     }
 
-    const res=await llm.invoke(state.prompt)
-    return {
-        ...state,
-        aiResponse:String(res.content||"")
-    }
+    const res=await llm.invoke(`
+        The user's request is:
+        
+${intent}
+
+Return Markdown only.
+
+Never generate project files.
+
+Use headings like:
+
+# Overview
+
+# Explanation
+
+## Problem
+
+## Improvements
+
+## Best Practices
+
+## Optimized Code (if needed)
+
+User Request:
+
+${state.prompt}
+
+`)
+const data=res.content
+return {
+    ...state,
+    aiResponse:data,
+    artifacts:[]
+}
 
 }
