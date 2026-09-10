@@ -1,16 +1,19 @@
 import { PanelRightClose, Code2 } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
-import { motion } from "motion/react"
+import { easeInOut, motion } from "motion/react"
 function Artifact() {
     const [collapsed,setCollapsed]=useState(false)
     const {artifacts} = useSelector(state=>state.message)
     if(artifacts?.length==0) return null;
   return (
     < motion.div 
-    initial={{width:"250px"}}
-    animate={{}}
-    transition={{}}
+    initial={{width:250}}
+    animate={{width:collapsed?48:250}}
+    transition={{
+        duration:0.25,
+        ease:easeInOut
+    }}
     className='hidden lg:flex h-full border-1 border-white/[0.06] flex-col overflow-hidden shrink-0 w-[250px]'>
         {!collapsed ? <div className='flex flex-col h-full bg-[#0d0f14]'>
             <div className='h-14 px-4 border-b border-white/[0.06] flex items-center gap-3 shrink-0'>
