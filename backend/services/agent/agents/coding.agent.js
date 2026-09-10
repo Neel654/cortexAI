@@ -92,7 +92,11 @@ ${state.prompt}
             return {
                 ...state,
                 aiResponse,
-                artifacts:[{id:1,type:"code",files}]
+                artifacts:[
+                    {id:Date.now(),
+                    type:"Project",
+                    files:files,
+                    title:state.prompt}]
             }
         } catch (error) {
             return {
