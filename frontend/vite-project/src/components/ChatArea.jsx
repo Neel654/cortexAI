@@ -16,7 +16,8 @@ function ChatArea() {
             const getMesg=async()=>{
                 const data=await getMessages(selectedConversation?._id)
                 dispatch(setMessages(data))
-                dispatch(setArtifacts(data.flatMap(m=>m.artifacts||[])))
+                const latestArtifactMessage=[...data].reverse().find(msg=>msg.artifacts && msg.artifacts.length>0)
+                dispatch(setArtifacts(latestArtifactMessage?.artifacts||[]))
             }
             getMesg()
         }
