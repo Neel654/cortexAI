@@ -1,10 +1,11 @@
-import { PanelRightClose, Code2, PanelRightOpen } from 'lucide-react'
+import { PanelRightClose, Code2, PanelRightOpen, Copy } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import { easeInOut, motion } from "motion/react"
 function Artifact() {
     const [collapsed,setCollapsed]=useState(false)
     const {artifacts} = useSelector(state=>state.message)
+    const [tab,setTab]=useState("code")
     if(artifacts?.length==0) return null;
   return (
     < motion.div 
@@ -26,6 +27,22 @@ function Artifact() {
                         <Code2 className='text-indigo-400' size={16}/>
                     </div>
                     <div className='text-sm font-medium text-slate-200 truncate'>{artifacts[0]?.title || "Artifacts"}</div>
+                </div>
+
+                <div className='flex items-center gap-1 shrink-0'>
+                    <button className='flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-slate-400
+                    hover:text-slate-200 hover:bg-white/[0.05] rounded-lg transition-colors duration-150 bg-transparent border-none
+                    cursor-pointer'>
+                        <Copy size={15}/>
+                    </button>
+                </div>
+                <div className='flex items-center gap-1 bg-white/[0.04] border border-white/[0.06] p-1 rounded-lg'>
+                    <button className={`flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md
+                        transition-colors duration-150 ${tab=="code" ? "bg-indigo-500 text-white" : "text-slate-500 hover:text-slate-200"}`}>
+                        <Code2 size={11}/> Code
+                    </button>
+                    <button>
+                    </button>
                 </div>
             </div>
         </div> :
