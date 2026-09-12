@@ -2,7 +2,9 @@ import { PanelRightClose, Code2, PanelRightOpen, Copy, Eye } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import { easeInOut, motion } from "motion/react"
+import Editor from '@monaco-editor/react'
 function Artifact() {
+
     const [collapsed, setCollapsed] = useState(false)
     const { artifacts } = useSelector(state => state.message)
     const [tab, setTab] = useState("code")
@@ -11,6 +13,7 @@ function Artifact() {
     if (artifacts?.length == 0) return null;
 
     const file = artifacts[0]?.files[activeFile]?.content
+    const activeFileName = artifacts[0]?.files[activeFile]?.name
     const htmlFile=artifacts[0]?.files?.find(f=>f.name==="index.html")
     const cssFile=artifacts[0]?.files?.find(f=>f.name==="style.css")
     const jsFile=artifacts[0]?.files?.find(f=>f.name==="script.js")
@@ -27,7 +30,7 @@ function Artifact() {
     </style>
 </head>
 <body>
-    
+    ${htmlFile?.content || ""}
 <script>
     ${jsFile?.content || ""}
 </script>
@@ -36,13 +39,13 @@ function Artifact() {
 
     return (
         < motion.div
-            initial={{ width: 350 }}
-            animate={{ width: collapsed ? 48 : 350 }}
+            initial={{ width: 400 }}
+            animate={{ width: collapsed ? 48 : 400 }}
             transition={{
                 duration: 0.25,
                 ease: easeInOut
             }}
-            className='hidden lg:flex h-full border-1 border-white/[0.06] flex-col overflow-hidden shrink-0 w-[350px]'>
+            className='hidden lg:flex h-full border-1 border-white/[0.06] flex-col overflow-hidden shrink-0 w-[400px]'>
             {!collapsed ? <div className='flex flex-col h-full bg-[#0d0f14]'>
                 <div className='h-14 px-4 border-b border-white/[0.06] flex items-center gap-3 shrink-0'>
                     <button className='flex items-center justify-center w-7 h-7 rounded-lg text-slate-500 hover:text-slate-200 hover:bg-white/[0.05] transition-colors duration-150 bg-transparent border-none cursor-pointer shrink-0'
@@ -75,8 +78,7 @@ function Artifact() {
                         </button>
                     </div>}
                 </div>
-
-                <div className='h-auto flex border-b border-white/[0.06] overflow-x-auto [scrollbar-width:none] 
+                {tab==="code" && <div className='h-auto flex border-b border-white/[0.06] overflow-x-auto [scrollbar-width:none] 
                     [&::-webkit-scrollbar]:hidden shrink-0'>
                     {
                         artifacts[0]?.files?.map((f, index) => (
@@ -91,8 +93,33 @@ function Artifact() {
                         ))
                     }
 
-                </div>
+                </div>}
+                
 
+                <div className='flex-1 overflow-hidden'>
+                    {(tab=="preview" && canPreview) ? <motion.div
+                    initial={{opacity:0}}
+                    animate={{opacity:1}}
+                    transition={{duration:0.5}}
+                    className='w-full h-full'>
+                        <iframe title='preview' srcDoc={previewDoc} sandbox='allow-scripts' className='w-full h-full bg-white' />
+
+                    </motion.div> 
+                    :
+                    <motion.div
+                    initial={{opacity:0}}
+                    animate={{opacity:1}}
+                    transition={{duration:0.5}}
+                    className='w-full h-full'>
+                        <Editor
+                        theme='vs-dark'
+                        value={file}
+                        language={activeFileName?.split(".").pop()}
+                        path={activeFileName}
+                        />
+                    </motion.div>}
+                    
+                </div>
 
             </div> :
                 <div className='hidden lg:flex h-full border-1 border-white/[0.06] bg-[#0d0f14] flex-col items-center py-4 gap-3 shrink-0'>
