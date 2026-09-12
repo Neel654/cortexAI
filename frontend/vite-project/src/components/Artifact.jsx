@@ -6,8 +6,34 @@ function Artifact() {
     const [collapsed, setCollapsed] = useState(false)
     const { artifacts } = useSelector(state => state.message)
     const [tab, setTab] = useState("code")
-    const [activeFile,setActiveFile]=useState(0)
+    const [activeFile, setActiveFile] = useState(0)
+
     if (artifacts?.length == 0) return null;
+
+    const file = artifacts[0]?.files[activeFile]?.content
+    const htmlFile=artifacts[0]?.files?.find(f=>f.name==="index.html")
+    const cssFile=artifacts[0]?.files?.find(f=>f.name==="style.css")
+    const jsFile=artifacts[0]?.files?.find(f=>f.name==="script.js")
+
+    const canPreview=Boolean(htmlFile)
+
+    const previewDoc = `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    ${cssFile?.content || ""}
+    </style>
+</head>
+<body>
+    
+<script>
+    ${jsFile?.content || ""}
+</script>
+</body>
+</html>`
+
     return (
         < motion.div
             initial={{ width: 350 }}
@@ -37,7 +63,8 @@ function Artifact() {
                             <Copy size={15} />
                         </button>
                     </div>
-                    <div className='flex items-center gap-1 bg-white/[0.04] border border-white/[0.06] p-1 rounded-lg'>
+    
+                    {canPreview && <div className='flex items-center gap-1 bg-white/[0.04] border border-white/[0.06] p-1 rounded-lg'>
                         <button onClick={() => setTab("code")} className={`flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md
                         transition-colors duration-150 ${tab == "code" ? "bg-indigo-500 text-white" : "text-slate-500 hover:text-slate-200"}`}>
                             <Code2 size={11} /> Code
@@ -46,25 +73,25 @@ function Artifact() {
                         transition-colors duration-150 ${tab == "preview" ? "bg-indigo-500 text-white" : "text-slate-500 hover:text-slate-200"}`}>
                             <Eye size={11} /> Preview
                         </button>
-                    </div>
+                    </div>}
                 </div>
 
-                    <div className='h-auto flex border-b border-white/[0.06] overflow-x-auto [scrollbar-width:none] 
+                <div className='h-auto flex border-b border-white/[0.06] overflow-x-auto [scrollbar-width:none] 
                     [&::-webkit-scrollbar]:hidden shrink-0'>
-                        {
-                            artifacts[0]?.files?.map((f,index)=>(
-                                <button 
+                    {
+                        artifacts[0]?.files?.map((f, index) => (
+                            <button
                                 key={f?.name || index}
-                                onClick={()=>setActiveFile(index)}
+                                onClick={() => setActiveFile(index)}
                                 className={`px-4 py-2.5 text-[11px] font-medium whitespace-nowrap transition-colors duration-150 border-r border-white/[0.05] relative cursor-pointer bg-transparent
-                                ${activeFile ===index ? "text-indigo-400" : "text-slate-500 hover:text-slate-300"}`}>
-                                    {f?.name}
-                                    {activeFile===index && <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-indigo-500 rounded-t-full'/> }
-                                </button>
-                            ))
-                        }
+                                ${activeFile === index ? "text-indigo-400" : "text-slate-500 hover:text-slate-300"}`}>
+                                {f?.name}
+                                {activeFile === index && <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-indigo-500 rounded-t-full' />}
+                            </button>
+                        ))
+                    }
 
-                    </div>
+                </div>
 
 
             </div> :
