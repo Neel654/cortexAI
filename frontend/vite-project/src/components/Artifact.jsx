@@ -6,6 +6,7 @@ function Artifact() {
     const [collapsed, setCollapsed] = useState(false)
     const { artifacts } = useSelector(state => state.message)
     const [tab, setTab] = useState("code")
+    const [activeFile,setActiveFile]=useState(0)
     if (artifacts?.length == 0) return null;
     return (
         < motion.div
@@ -48,9 +49,20 @@ function Artifact() {
                     </div>
                 </div>
 
-                    <div className='h-auto flex border-b border-white/[0.06] overflow-x-auto [scrollbar-width:none 
+                    <div className='h-auto flex border-b border-white/[0.06] overflow-x-auto [scrollbar-width:none] 
                     [&::-webkit-scrollbar]:hidden shrink-0'>
-
+                        {
+                            artifacts[0]?.files?.map((f,index)=>(
+                                <button 
+                                key={f?.name || index}
+                                onClick={()=>setActiveFile(index)}
+                                className={`px-4 py-2.5 text-[11px] font-medium whitespace-nowrap transition-colors duration-150 border-r border-white/[0.05] relative cursor-pointer bg-transparent
+                                ${activeFile ===index ? "text-indigo-400" : "text-slate-500 hover:text-slate-300"}`}>
+                                    {f?.name}
+                                    {activeFile===index && <div className='absolute bottom-0 left-0 right-0 h-[2px] bg-indigo-500 rounded-t-full'/> }
+                                </button>
+                            ))
+                        }
 
                     </div>
 
