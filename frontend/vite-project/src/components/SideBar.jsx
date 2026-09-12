@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createConversation } from '../features/createConversation'
 import { setUserdata } from '../redux/userSlice'
 import logOut from '../features/logOut'
+import { auth } from '../utils/firebase'
+import api from '../utils/axious'
 
 
 function SideBar() {
@@ -14,6 +16,15 @@ function SideBar() {
     const dispatch=useDispatch()
     const {conversations,selectedConversation}=useSelector(state=>state.conversation)
     const {userData}=useSelector(state=>state.user)
+    const handleLogin=async () => {
+        try{
+            const token=await auth.currentUser.getIdToken(true)
+            const {data}=await api.post("/api/auth/login",{token})
+            dispatch(setUserdata(data))
+        }catch (error){
+            console.log(error)
+        }
+    }
     const handleCreate=async () => {
         const data = await createConversation()
         dispatch(addConversations(data))
@@ -155,7 +166,7 @@ function SideBar() {
                             </div>
                         </div>)
                          : 
-                         <button className='w-full flex items-center justify-center gap-2 text-sm font-medium text-slate-200 bg-white/[0.05] border border-white/[0.08] rounded-xl py-[11px] cursor-pointer hover:bg-white/[0.08] transition-colors duration-150'>
+                         <button onClick={handleLogin} className='w-full flex items-center justify-center gap-2 text-sm font-medium text-slate-200 bg-white/[0.05] border border-white/[0.08] rounded-xl py-[11px] cursor-pointer hover:bg-white/[0.08] transition-colors duration-150'>
                             Login
                             </button>}
                 </div>
