@@ -28,6 +28,7 @@ function SideBar() {
     const handleCreate=async () => {
         const data = await createConversation()
         dispatch(addConversations(data))
+        dispatch(setSelectedConversation(data))
     }
     useEffect(()=>{
         const getConv=async () => {
