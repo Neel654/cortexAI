@@ -45,6 +45,13 @@ Rules:
 - Beautiful spacing
 - Single page unless user asks otherwise.
 
+Image Rules:
+
+- NEVER use via.placeholder.com (service is dead, images will not load)
+- For placeholder images use https://placehold.co/300x200/f59e0b/fff or https://picsum.photos/300/200
+- Prefer realistic images from https://images.unsplash.com/... (use known-good photo URLs)
+- Always include a working src for every img tag
+
 Return ONLY valid JSON.
 
 Schema:
