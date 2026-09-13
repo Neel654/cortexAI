@@ -16,7 +16,7 @@ const gemini = new ChatGoogle({
 const openrouter =new ChatOpenRouter({
     model:"deepseek/deepseek-chat",
     temperature:0,
-    maxTokens:2500
+    maxTokens:8000
 })
 
 export const getModel=async (agent)=>{

@@ -82,7 +82,7 @@ ${state.prompt}
         let res
         try {
             res=await llm.invoke(prompt)
-            const content=String(res.content||"")
+            const content=String(res.content||"").replace(/^```(?:json)?\s*/i,"").replace(/\s*```$/,"").trim()
             const parsed=JSON.parse(content)
             const files=parsed.files||[]
             const aiResponse=`Generated ${files.length} files:\n\n` + files.map(f=>{
@@ -101,7 +101,7 @@ ${state.prompt}
         } catch (error) {
             return {
                 ...state,
-                aiResponse:String(res?.content||"I couldn't generate valid files. Please try again.")
+                aiResponse:"I couldn't generate a complete project — the response was cut off or invalid. Please try again with a smaller or more specific request."
             }
         }
     }
