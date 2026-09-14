@@ -1,6 +1,5 @@
 import { getModel } from "../config/llmModels.js"
 
-
 export const visionAgent=async (state) => {
     const llm=await getModel("image")
     const res=await llm.invoke(`
@@ -28,8 +27,12 @@ User Request:
 
 ${state.prompt}
 `)
+    const prompt=String(res.content||"").trim()
+    const imageUrl=`https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}`
+
     return {
         ...state,
-        aiResponse:String(res.content||"").trim()
+        aiResponse:"Here's your generated image:",
+        images:[imageUrl]
     }
 }

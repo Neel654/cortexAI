@@ -67,7 +67,7 @@ const agents=[
     {
         id:"image",
         icon:ImageIcon,
-        label:"Image"
+        label:"Vision"
     },
     {
         id:"search",
