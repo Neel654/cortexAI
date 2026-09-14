@@ -1,4 +1,4 @@
-import { PanelRightClose, Code2, PanelRightOpen, Copy, Eye } from 'lucide-react'
+import { PanelRightClose, Code2, PanelRightOpen, Copy, Eye, Check } from 'lucide-react'
 import { useSelector } from 'react-redux'
 import { useState } from 'react'
 import { easeInOut, motion } from "motion/react"
@@ -9,9 +9,17 @@ function Artifact() {
     const { artifacts } = useSelector(state => state.message)
     const [tab, setTab] = useState("code")
     const [activeFile, setActiveFile] = useState(0)
+    const [copied, setCopied] = useState(false)
 
     if (artifacts?.length == 0) return null;
 
+    const handleCopy=async ()=>{
+        await navigator.clipboard.writeText(file || "")
+        setCopied(true)
+        setTimeout(()=>{
+            setCopied(false)
+    },2000)
+    }
     const file = artifacts[0]?.files[activeFile]?.content
     const activeFileName = artifacts[0]?.files[activeFile]?.name
     const htmlFile=artifacts[0]?.files?.find(f=>f.name==="index.html")
@@ -90,10 +98,12 @@ const detectLanguage=(fileName="")=>{
                     </div>
 
                     <div className='flex items-center gap-1 shrink-0'>
-                        <button className='flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-slate-400
+                        <button 
+                        onClick={handleCopy}
+                        className='flex items-center gap-1.5 px-2.5 py-1.5 text-[11px] font-medium text-slate-400
                     hover:text-slate-200 hover:bg-white/[0.05] rounded-lg transition-colors duration-150 bg-transparent border-none
                     cursor-pointer'>
-                            <Copy size={15} />
+                            {copied? <Check size={15}/> : <Copy size={15} />}
                         </button>
                     </div>
     
